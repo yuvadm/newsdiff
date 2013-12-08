@@ -8,7 +8,7 @@ class NewsDiffUser(AbstractUser):
 
 
 class HaaretzArticle(models.Model):
-    url = models.CharField(max_length=200)
+    url = models.CharField(max_length=200, unique=True, db_index=True)
     title = models.CharField(max_length=140)
     subtitle = models.CharField(max_length=300, blank=True, null=True)
     text = models.TextField()
