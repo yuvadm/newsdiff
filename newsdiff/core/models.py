@@ -1,5 +1,10 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.timezone import now as tz_now
+
+
+class NewsDiffUser(AbstractUser):
+    pass
 
 
 class HaaretzArticle(models.Model):

@@ -86,6 +86,8 @@ INSTALLED_APPS = (
     'newsdiff.core'
 )
 
+AUTH_USER_MODEL = 'core.NewsDiffUser'
+
 SITE_ID = 1
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
