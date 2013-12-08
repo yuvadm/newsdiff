@@ -82,6 +82,7 @@ INSTALLED_APPS = (
 
     'south',
     'storages',
+    'celery',
 
     'newsdiff.core'
 )
