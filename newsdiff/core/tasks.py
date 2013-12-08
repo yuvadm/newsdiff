@@ -26,16 +26,31 @@ def get_haaretz_article(url):
         article_body = soup.find('div', id='article-box').find_all('p')
         article_text = '\n\n'.join([p.text.strip() for p in article_body])
 
-        article = HaaretzArticle(url=url, title=title, subtitle=subtitle, text=article_text, date=article_date)
-        article.save()
+        existing_article = HaaretzArticle.objects.get(url=url)
+        if existing_article:
+            changed = False
+            if title != existing_article.title:
+                existing_article.title = title
+                changed = True
+            if subtitle != existing_article.subtitle:
+                existing_article.subtitle = subtitle
+                changed = True
+            if article_text != existing_article.text:
+                existing_article.text = text
+                changed = True
+            if changed:
+                existing_article.save()
+        else:
+            article = HaaretzArticle(url=url, title=title, subtitle=subtitle, text=article_text, date=article_date)
+            article.save()
 
-        images = soup.find('div', id='article-box').find_all('div', class_='inArticleHoldImage')
-        for image in images:
-            img = image.find('img')
-            img_url = 'http://www.haaretz.co.il{}'.format(img['src'].split('_gen')[0])
-            caption = img.title
+            images = soup.find('div', id='article-box').find_all('div', class_='inArticleHoldImage')
+            for image in images:
+                img = image.find('img')
+                img_url = 'http://www.haaretz.co.il{}'.format(img['src'].split('_gen')[0])
+                caption = img.title
 
-            name, image_file = get_image_from_url(img_url)
-            article_image = HaaretzImage(article=article, origin_url=url, caption=caption)
-            article_image.image.save(name, image_file)
-            article_image.save()
+                name, image_file = get_image_from_url(img_url)
+                article_image = HaaretzImage(article=article, origin_url=url, caption=caption)
+                article_image.image.save(name, image_file)
+                article_image.save()
