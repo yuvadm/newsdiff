@@ -14,9 +14,15 @@ class HaaretzArticle(models.Model):
     text = models.TextField()
     date = models.DateTimeField()
 
+    def __unicode__(self):
+        return self.url
+
 
 class HaaretzImage(models.Model):
     article = models.ForeignKey(HaaretzArticle)
     origin_url = models.CharField(max_length=200)
     image = models.ImageField(upload_to='images/haaretz')
     caption = models.CharField(max_length=140, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.origin_url
