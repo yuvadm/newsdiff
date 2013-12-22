@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    needed_by = (
+        ('reversion', '0001_initial'),
+    )
+
     def forwards(self, orm):
         # Adding model 'NewsDiffUser'
         db.create_table(u'core_newsdiffuser', (
