@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 from .base import HtmlSoupParser
-from .models import HaaretzArticle, HaaretzImage
-from .utils import get_image_from_url
+from ..models import HaaretzArticle, HaaretzImage
+from ..utils import get_image_from_url
 
 
 class HaaretzParser(HtmlSoupParser):
