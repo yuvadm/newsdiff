@@ -8,13 +8,34 @@ from pytz import timezone
 from .models import HaaretzArticle, HaaretzImage
 from .utils import get_image_from_url
 
+DEFAULT_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+}
+
 ISRAEL_TIMEZONE = timezone('Asia/Jerusalem')
+
+def is_haaretz_href(href):
+    if href is None:
+        return False
+    if href.startswith('http://www.haaretz.co.il/'):
+        return True
+    if href.startswith('/news/'):
+        return True
+    # there are more, such as /{gallery,captain}/, etc.
+    # but ignore for now
+    return False
+
+@app.task():
+def parse_haaretz_homepage():
+    req = requests.get('http://www.haaretz.co.il/', headers=DEFAULT_HEADERS)
+    if req.ok:
+        soup = BeautifulSoup(req.text, 'lxml')
+        articles = soup.findall('a', href=is_haaretz_href)
+
 
 @app.task()
 def get_haaretz_article(url):
-    req = requests.get(url, headers={
-        'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
-    })
+    req = requests.get(url, headers=DEFAULT_HEADERS)
     if req.ok:
         soup = BeautifulSoup(req.text, 'lxml')
         title = soup.find('h1', class_='mainTitle').text.strip()
