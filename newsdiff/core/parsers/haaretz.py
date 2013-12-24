@@ -16,14 +16,12 @@ class HaaretzParser(HtmlSoupParser):
     ARTICLE_MODEL = HaaretzArticle
     IMAGE_MODEL = HaaretzImage
 
-    def parse_haaretz_homepage(self):
-        soup = self.get_homepage()
-        articles = soup.find_all('a', href=ARTICLE_HREF_PATTERN)
+    def parse_homepage(self, soup):
+        articles = soup.find_all('a', href=self.ARTICLE_HREF_PATTERN)
         hrefs = [article['href'] for article in articles]
-        hrefs = list(set(map(clean_haaretz_href, hrefs)))
+        return list(set(map(self.clean_article_href, hrefs)))
 
-    def parse_article(self, url):
-        soup = self.get_page(url)
+    def parse_article(self, soup):
         title = soup.find('h1', class_='mainTitle').text.strip()
         subtitle = soup.find('h2', class_='subtitle').text.strip()
         author_bar = soup.find('ul', class_='author-bar')

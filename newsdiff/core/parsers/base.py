@@ -14,11 +14,18 @@ class HtmlSoupParser(object):
 
     def get_page(self, url):
         req = requests.get(url, headers=HTTP_HEADERS)
-        if req.ok:
-            return BeautifulSoup(req.text, 'lxml')
+        return BeautifulSoup(req.text, 'lxml')
 
-    def get_homepage(self):
-        return get_page(self.HOMEPAGE_URL)
+    def process_homepage(self):
+        soup = self.get_page(self.HOMEPAGE_URL)
+        self.parse_homepage(soup)
+
+    def process_article(self, url):
+        soup = self.get_page(url)
+        self.parse_article(soup)
+
+    def parse_homepage(soup):
+        raise NotImplementedError
 
     def parse_article(self, url):
         raise NotImplementedError
