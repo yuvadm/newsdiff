@@ -31,4 +31,4 @@ class HaaretzParsingTestCase(TestCase):
         article = HaaretzArticle.objects.get(haaretz_id=article_id)
         self.assertEqual(article.url, 'http://www.haaretz.co.il/{}'.format(article_id))
         images = article.images
-        self.assertEqual(images.count(), 5)
+        self.assertEqual(images.count(), 2)
