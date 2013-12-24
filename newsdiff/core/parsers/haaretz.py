@@ -61,9 +61,13 @@ class HaaretzParser(HtmlSoupParser):
                 caption = img.title
 
                 name, image_file = get_image_from_url(img_url)
-                article_image = self.IMAGE_MODEL(article=article, origin_url=img_url, caption=caption)
-                article_image.image.save(name, image_file)
-                article_image.save()
+
+                article_image, created = self.IMAGE_MODEL.objects.get_or_create(article=article,
+                    origin_url=img_url, defaults={'caption': caption})
+
+                if created:
+                    article_image.image.save(name, image_file)
+                    article_image.save()
 
     def clean_article_href(self, href):
         href = href.replace('.premium-', '').split('#')[0]

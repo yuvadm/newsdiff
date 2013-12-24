@@ -32,3 +32,12 @@ class HaaretzParsingTestCase(TestCase):
         self.assertEqual(article.url, 'http://www.haaretz.co.il/{}'.format(article_id))
         images = article.images
         self.assertEqual(images.count(), 2)
+
+    def test_duplicate_article(self):
+        article_id = '1.2198200'
+        soup = self._get_soup('{}.html'.format(article_id))
+        self.parser.parse_article(article_id, soup)
+        article = HaaretzArticle.objects.all()
+        self.assertEqual(article.count(), 1)
+        images = HaaretzImage.objects.all()
+        self.assertEqual(images.count(), 2)
