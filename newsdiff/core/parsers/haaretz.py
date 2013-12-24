@@ -12,7 +12,7 @@ from ..utils import get_image_from_url
 class HaaretzParser(HtmlSoupParser):
 
     HOMEPAGE_URL = 'http://www.haaretz.co.il/'
-    ARTICLE_HREF_PATTERN = re.compile(r'(http:\/\/www\.haaretz\.co\.il)?/news/[a-zA-Z0-9\-\/]+/\d.\d+')
+    ARTICLE_HREF_PATTERN = re.compile(r'''^(http:\/\/www\.haaretz\.co\.il)?/((news|opinions|magazine|captain)/[a-zA-Z0-9\-\/]*(\.premium-)?)?\d\.\d+(#article_comments)?$''')
     ARTICLE_MODEL = HaaretzArticle
     IMAGE_MODEL = HaaretzImage
 

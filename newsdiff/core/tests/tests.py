@@ -18,4 +18,4 @@ class HaaretzParsingTestCase(TestCase):
     def test_parse_homepage(self):
         soup = BeautifulSoup(self._get_content('haaretz.html'))
         articles = self.parser.parse_homepage(soup)
-        self.assertTrue(articles)
+        self.assertEqual(len(articles), 67)
