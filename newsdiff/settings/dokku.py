@@ -5,6 +5,10 @@ from .base import *
 
 ENV = 'dokku'
 
+ALLOWED_HOSTS = (
+    environ.get('PUBLIC_HOSTNAME'),
+)
+
 DATABASES = {
     'default': dj_database_url.config()
 }
