@@ -16,9 +16,11 @@ DATABASES = {
     }
 }
 
+
 MEDIA_ROOT = PROJECT_DIR.child('media')
 MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CELERY_ALWAYS_EAGER = True  # Makes all celery tasks run synchronously
+BROKER_URL = 'redis://localhost:6379/0'

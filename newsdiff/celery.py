@@ -5,7 +5,7 @@ import os
 from celery import Celery
 from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'segmanta.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'newsdiff.settings')
 
 app = Celery('newsdiff')
 app.config_from_object('django.conf:settings')
