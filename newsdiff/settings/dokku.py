@@ -1,7 +1,6 @@
 import dj_database_url
 
 from os import environ
-from S3 import CallingFormat
 from .base import *
 
 ENV = 'dokku'
@@ -18,4 +17,3 @@ STATICFILES_STORAGE = DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoSto
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_KEY')
 AWS_STORAGE_BUCKET_NAME = environ.get('AWS_STORAGE_BUCKET_NAME')
-AWS_CALLING_FORMAT = CallingFormat.SUBDOMAIN
