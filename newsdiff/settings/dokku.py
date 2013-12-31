@@ -13,6 +13,8 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
+BROKER_URL = environ.get('REDIS_URL')
+
 STATICFILES_STORAGE = DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_KEY')
