@@ -126,6 +126,7 @@ LOGGING = {
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 CELERYBEAT_SCHEDULE = {
     'rain': {
         'task': 'newsdiff.rain.tasks.import_rain_radar_image',
