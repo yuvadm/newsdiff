@@ -17,5 +17,10 @@ STATICFILES_STORAGE = DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoSto
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_KEY')
 AWS_STORAGE_BUCKET_NAME = environ.get('AWS_STORAGE_BUCKET_NAME')
-STATIC_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+AWS_QUERYSTRING_AUTH = False
+AWS_PRELOAD_METADATA = True
+AWS_IS_GZIPPED = True
+AWS_S3_SECURE_URLS = False
+AWS_HEADERS = {
+    # 'Cache-Control': 'public, max-age=86400',
+}
