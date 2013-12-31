@@ -6,7 +6,7 @@ from django.core.files.temp import NamedTemporaryFile
 from urlparse import urlparse
 
 
-def get_image_from_url(url):
+def get_file_from_url(url):
     tmp = NamedTemporaryFile(delete=True)
     req = requests.get(url)
     if not req.ok:

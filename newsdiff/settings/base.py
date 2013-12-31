@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'reversion',
 
     'newsdiff.core',
+    'newsdiff.docs',
     'newsdiff.rain'
 )
 
