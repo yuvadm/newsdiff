@@ -1,4 +1,6 @@
+from datetime import timedelta
 from unipath import FSPath as Path
+
 
 PROJECT_DIR = Path(__file__).absolute().ancestor(2)
 
@@ -13,7 +15,7 @@ MANAGERS = ADMINS
 
 ALLOWED_HOSTS = []
 
-TIME_ZONE = 'Etc/UTC'
+TIME_ZONE = 'Asia/Jerusalem'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
@@ -86,7 +88,9 @@ INSTALLED_APPS = (
     'celery',
     'reversion',
 
-    'newsdiff.core'
+    'newsdiff.core',
+    'newsdiff.docs',
+    'newsdiff.rain'
 )
 
 AUTH_USER_MODEL = 'core.NewsDiffUser'
@@ -120,3 +124,11 @@ LOGGING = {
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERYBEAT_SCHEDULE = {
+    'rain': {
+        'task': 'newsdiff.rain.tasks.import_rain_radar_image',
+        'schedule': timedelta(minutes=10)
+    },
+}

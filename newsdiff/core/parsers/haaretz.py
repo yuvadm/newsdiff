@@ -6,7 +6,7 @@ from datetime import datetime
 
 from .base import HtmlSoupParser
 from ..models import HaaretzArticle, HaaretzImage
-from ..utils import get_image_from_url
+from ..utils import get_file_from_url
 
 
 class HaaretzParser(HtmlSoupParser):
@@ -60,7 +60,7 @@ class HaaretzParser(HtmlSoupParser):
                 img_url = 'http://www.haaretz.co.il{}'.format(img['src'].split('_gen')[0])
                 caption = img.title
 
-                name, image_file = get_image_from_url(img_url)
+                name, image_file = get_file_from_url(img_url)
 
                 article_image, created = self.IMAGE_MODEL.objects.get_or_create(article=article,
                     origin_url=img_url, defaults={'caption': caption})
