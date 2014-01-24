@@ -132,4 +132,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'newsdiff.rain.tasks.import_rain_radar_image',
         'schedule': timedelta(minutes=10)
     },
+    'haaretz_homepage': {
+        'task': 'newsdiff.core.tasks.process_haaretz_homepage',
+        'schedule': timedelta(minutes=15)
+    }
 }

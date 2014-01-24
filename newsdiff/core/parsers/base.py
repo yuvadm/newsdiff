@@ -20,8 +20,7 @@ class HtmlSoupParser(object):
     def process_homepage(self):
         soup = self.get_page(self.HOMEPAGE_URL)
         articles = self.parse_homepage(soup)
-        for article_url in articles:
-            self.process_article(article_url)
+        return articles
 
     def process_article(self, url):
         soup = self.get_page(url)
