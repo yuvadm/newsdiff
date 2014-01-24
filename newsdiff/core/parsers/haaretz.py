@@ -11,8 +11,10 @@ from ..utils import get_file_from_url
 
 class HaaretzParser(HtmlSoupParser):
 
-    HOMEPAGE_URL = 'http://www.haaretz.co.il/'
+    BASE_URL = 'http://www.haaretz.co.il'
+    HOMEPAGE_URL = BASE_URL + '/'
     ARTICLE_HREF_PATTERN = re.compile(r'''^(http:\/\/www\.haaretz\.co\.il)?/((news|opinions|magazine|captain)/[a-zA-Z0-9\-\/]*(\.premium-)?)?\d\.\d+(#article_comments)?$''')
+    ARTICLE_ID_PATTERN = re.compile(r'1.[0-9]+')
     ARTICLE_MODEL = HaaretzArticle
     IMAGE_MODEL = HaaretzImage
 
@@ -22,12 +24,12 @@ class HaaretzParser(HtmlSoupParser):
         article_urls = list(set(map(self.clean_article_href, hrefs)))
         return article_urls
 
-    def parse_article(self, haaretz_id, soup, url=None):
-        if not url:
-            url = 'http://www.haaretz.co.il/{}'.format(haaretz_id)
+    def parse_article(self, url, soup):
+        haaretz_id = re.findall(self.ARTICLE_ID_PATTERN, url)[0]
         title = soup.find('h1', class_='mainTitle').text.strip()
         subtitle = soup.find('h2', class_='subtitle').text.strip()
         author_bar = soup.find('ul', class_='author-bar')
+        author = author_bar.find(class_=re.compile('autorBar(Anchor|Writers)')).text.strip()
         date = author_bar.find_all('li')[1].text.strip()
         time = author_bar.find_all('li')[2].text.strip()
         article_date = self.TIMEZONE.localize(datetime.strptime(' '.join([date, time]), '%d.%m.%Y %H:%M'))
@@ -50,11 +52,10 @@ class HaaretzParser(HtmlSoupParser):
                 existing_article.save()
         except self.ARTICLE_MODEL.DoesNotExist:
             article = self.ARTICLE_MODEL(url=url, haaretz_id=haaretz_id, title=title,
-                subtitle=subtitle, text=article_text, date=article_date)
+                subtitle=subtitle, author=author, text=article_text, date=article_date)
             article.save()
 
             images = soup.find('div', id='article-box').find_all('div', class_='inArticleHoldImage')
-            print images
             for image in images:
                 img = image.find('img')
                 img_url = 'http://www.haaretz.co.il{}'.format(img['src'].split('_gen')[0])
@@ -62,8 +63,8 @@ class HaaretzParser(HtmlSoupParser):
 
                 name, image_file = get_file_from_url(img_url)
 
-                article_image, created = self.IMAGE_MODEL.objects.get_or_create(article=article,
-                    origin_url=img_url, defaults={'caption': caption})
+                article_image, created = self.IMAGE_MODEL.objects.get_or_create(origin_url=img_url,
+                    defaults={'article': article, 'caption': caption})
 
                 if created:
                     article_image.image.save(name, image_file)
