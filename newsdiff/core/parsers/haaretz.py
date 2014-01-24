@@ -20,11 +20,8 @@ class HaaretzParser(HtmlSoupParser):
     ARTICLE_MODEL = HaaretzArticle
     IMAGE_MODEL = HaaretzImage
 
-    def parse_homepage(self, soup):
-        links = soup.find_all('a', href=self.ARTICLE_HREF_PATTERN)
-        hrefs = [link['href'] for link in links]
-        article_urls = list(set(map(self.clean_article_href, hrefs)))
-        return article_urls
+    def article_id_to_url(self, article_id):
+        return '{}/{}'.format(self.BASE_URL, article_id)
 
     def parse_article(self, url, soup):
         haaretz_id = re.findall(self.ARTICLE_ID_PATTERN, url)[0]

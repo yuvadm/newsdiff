@@ -26,7 +26,7 @@ class HaaretzParsingTestCase(TestCase):
 
     def test_parse_article(self):
         article_id = '1.2198200'
-        article_url = '{}/{}'.format(self.parser.BASE_URL, article_id)
+        article_url = self.parser.article_id_to_url(article_id)
         soup = self._get_soup('{}.html'.format(article_id))
         self.parser.parse_article(article_url, soup)
         article = HaaretzArticle.objects.get(haaretz_id=article_id)

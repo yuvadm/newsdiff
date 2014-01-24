@@ -17,6 +17,12 @@ class HtmlSoupParser(object):
         req = requests.get(url, headers=self.HTTP_HEADERS)
         return BeautifulSoup(req.text, 'lxml')
 
+    def parse_homepage(self, soup):
+        links = soup.find_all('a', href=self.ARTICLE_HREF_PATTERN)
+        hrefs = [link['href'] for link in links]
+        article_urls = list(set(map(self.clean_article_href, hrefs)))
+        return article_urls
+
     def process_homepage(self):
         soup = self.get_page(self.HOMEPAGE_URL)
         articles = self.parse_homepage(soup)
@@ -25,9 +31,6 @@ class HtmlSoupParser(object):
     def process_article(self, url):
         soup = self.get_page(url)
         self.parse_article(url, soup)
-
-    def parse_homepage(self, soup):
-        raise NotImplementedError
 
     def parse_article(self, url, soup):
         raise NotImplementedError

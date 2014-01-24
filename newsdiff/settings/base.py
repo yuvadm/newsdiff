@@ -135,5 +135,9 @@ CELERYBEAT_SCHEDULE = {
     'haaretz_homepage': {
         'task': 'newsdiff.core.tasks.process_haaretz_homepage',
         'schedule': timedelta(minutes=15)
+    },
+    'ynet_homepage': {
+        'task': 'newsdiff.core.tasks.process_ynet_homepage',
+        'schedule': timedelta(minutes=15)
     }
 }
