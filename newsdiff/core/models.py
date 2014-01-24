@@ -8,11 +8,11 @@ class NewsDiffUser(AbstractUser):
 
 
 class HaaretzArticle(models.Model):
-    url = models.CharField(max_length=200)
+    url = models.CharField(max_length=250)
     haaretz_id = models.CharField(max_length=12, unique=True, db_index=True)
-    title = models.CharField(max_length=140)
-    subtitle = models.CharField(max_length=500, blank=True, null=True)
-    author = models.CharField(max_length=30)
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=1000, blank=True, null=True)
+    author = models.CharField(max_length=60)
     text = models.TextField()
     date = models.DateTimeField()
 
@@ -22,7 +22,7 @@ class HaaretzArticle(models.Model):
 
 class HaaretzImage(models.Model):
     article = models.ForeignKey(HaaretzArticle, related_name='images')
-    origin_url = models.CharField(max_length=200, unique=True)
+    origin_url = models.CharField(max_length=250, unique=True)
     image = models.ImageField(upload_to='images/haaretz')
     caption = models.CharField(max_length=140, blank=True, null=True)
 
