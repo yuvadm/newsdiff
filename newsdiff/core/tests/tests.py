@@ -26,10 +26,11 @@ class HaaretzParsingTestCase(TestCase):
 
     def test_parse_article(self):
         article_id = '1.2198200'
+        article_url = '{}/{}'.format(self.parser.BASE_URL, article_id)
         soup = self._get_soup('{}.html'.format(article_id))
-        self.parser.parse_article(article_id, soup)
+        self.parser.parse_article(article_url, soup)
         article = HaaretzArticle.objects.get(haaretz_id=article_id)
-        self.assertEqual(article.url, 'http://www.haaretz.co.il/{}'.format(article_id))
+        self.assertEqual(article.url, article_url)
         images = article.images
         self.assertEqual(images.count(), 2)
 

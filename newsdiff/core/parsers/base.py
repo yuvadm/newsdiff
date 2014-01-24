@@ -26,10 +26,10 @@ class HtmlSoupParser(object):
         soup = self.get_page(url)
         self.parse_article(url, soup)
 
-    def parse_homepage(soup):
+    def parse_homepage(self, soup):
         raise NotImplementedError
 
-    def parse_article(self, url):
+    def parse_article(self, url, soup):
         raise NotImplementedError
 
     def clean_article_href(self, href):

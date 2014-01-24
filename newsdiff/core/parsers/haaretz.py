@@ -15,8 +15,8 @@ class HaaretzParser(HtmlSoupParser):
 
     BASE_URL = 'http://www.haaretz.co.il'
     HOMEPAGE_URL = BASE_URL + '/'
-    ARTICLE_HREF_PATTERN = re.compile(r'''^(http:\/\/www\.haaretz\.co\.il)?/((news|opinions|magazine|captain)/[a-zA-Z0-9\-\/]*(\.premium-)?)?\d\.\d+(#article_comments)?$''')
-    ARTICLE_ID_PATTERN = re.compile(r'1.[0-9]+')
+    ARTICLE_HREF_PATTERN = re.compile(r'''^(http:\/\/www\.haaretz\.co\.il)?/((news|opinions|magazine|captain)/[a-zA-Z0-9\-\/]*(\.premium-)?)?1\.\d+(#article_comments)?$''')
+    ARTICLE_ID_PATTERN = re.compile(r'1\.\d+')
     ARTICLE_MODEL = HaaretzArticle
     IMAGE_MODEL = HaaretzImage
 
