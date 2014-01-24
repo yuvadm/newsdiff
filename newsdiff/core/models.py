@@ -1,3 +1,5 @@
+import reversion
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.timezone import now as tz_now
@@ -18,6 +20,8 @@ class HaaretzArticle(models.Model):
 
     def __unicode__(self):
         return self.url
+
+reversion.register(HaaretzArticle)
 
 
 class HaaretzImage(models.Model):
