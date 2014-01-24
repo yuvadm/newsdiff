@@ -1,8 +1,10 @@
 import re
 import requests
+import reversion
 
 from bs4 import BeautifulSoup
 from datetime import datetime
+from django.db import transaction
 
 from .base import HtmlSoupParser
 from ..models import HaaretzArticle, HaaretzImage
@@ -36,39 +38,40 @@ class HaaretzParser(HtmlSoupParser):
         article_body = soup.find('div', id='article-box').find_all('p')
         article_text = '\n\n'.join([p.text.strip() for p in article_body])
 
-        try:
-            existing_article = self.ARTICLE_MODEL.objects.get(haaretz_id=haaretz_id)
-            changed = False
-            if title != existing_article.title:
-                existing_article.title = title
-                changed = True
-            if subtitle != existing_article.subtitle:
-                existing_article.subtitle = subtitle
-                changed = True
-            if article_text != existing_article.text:
-                existing_article.text = text
-                changed = True
-            if changed:
-                existing_article.save()
-        except self.ARTICLE_MODEL.DoesNotExist:
-            article = self.ARTICLE_MODEL(url=url, haaretz_id=haaretz_id, title=title,
-                subtitle=subtitle, author=author, text=article_text, date=article_date)
-            article.save()
+        with transaction.atomic(), reversion.create_revision():
+            try:
+                existing_article = self.ARTICLE_MODEL.objects.get(haaretz_id=haaretz_id)
+                changed = False
+                if title != existing_article.title:
+                    existing_article.title = title
+                    changed = True
+                if subtitle != existing_article.subtitle:
+                    existing_article.subtitle = subtitle
+                    changed = True
+                if article_text != existing_article.text:
+                    existing_article.text = text
+                    changed = True
+                if changed:
+                    existing_article.save()
+            except self.ARTICLE_MODEL.DoesNotExist:
+                article = self.ARTICLE_MODEL(url=url, haaretz_id=haaretz_id, title=title,
+                    subtitle=subtitle, author=author, text=article_text, date=article_date)
+                article.save()
 
-            images = soup.find('div', id='article-box').find_all('div', class_='inArticleHoldImage')
-            for image in images:
-                img = image.find('img')
-                img_url = 'http://www.haaretz.co.il{}'.format(img['src'].split('_gen')[0])
-                caption = img.title
+                images = soup.find('div', id='article-box').find_all('div', class_='inArticleHoldImage')
+                for image in images:
+                    img = image.find('img')
+                    img_url = 'http://www.haaretz.co.il{}'.format(img['src'].split('_gen')[0])
+                    caption = img.title
 
-                name, image_file = get_file_from_url(img_url)
+                    name, image_file = get_file_from_url(img_url)
 
-                article_image, created = self.IMAGE_MODEL.objects.get_or_create(origin_url=img_url,
-                    defaults={'article': article, 'caption': caption})
+                    article_image, created = self.IMAGE_MODEL.objects.get_or_create(origin_url=img_url,
+                        defaults={'article': article, 'caption': caption})
 
-                if created:
-                    article_image.image.save(name, image_file)
-                    article_image.save()
+                    if created:
+                        article_image.image.save(name, image_file)
+                        article_image.save()
 
     def clean_article_href(self, href):
         href = href.replace('.premium-', '').split('#')[0]
