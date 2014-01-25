@@ -25,15 +25,15 @@ class YnetParser(HtmlSoupParser):
 
     def parse_article(self, url, soup):
         ynet_id = re.findall(self.ARTICLE_ID_PATTERN, url)[0]
-        title = soup.find('div', class_='art_header_title').text.strip()
-        subtitle = soup.find('div', class_='art_header_sub_title').text.strip()
+        title = soup.find('div', class_='art_header_title').text.strip().encode('iso-8859-1')
+        subtitle = soup.find('div', class_='art_header_sub_title').text.strip().encode('iso-8859-1')
         author_bar = soup.find('span', class_='art_header_footer_author')
-        author = author_bar.find('a').text.strip()
+        author = author_bar.find('a').text.strip().encode('iso-8859-1')
         date = re.findall(r'\d\d.\d\d.\d\d', author_bar.text)[0]
         time = re.findall(r'\d\d:\d\d', author_bar.text)[0]
         article_date = self.TIMEZONE.localize(datetime.strptime(' '.join([date, time]), '%d.%m.%y %H:%M'))
         article_body = soup.find('div', class_='art_body').find_all('p')
-        article_text = '\n'.join([p.text.strip() for p in article_body])
+        article_text = '\n'.join([p.text.strip().encode('iso-8859-1') for p in article_body])
 
         with transaction.atomic(), reversion.create_revision():
             try:
