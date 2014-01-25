@@ -46,7 +46,7 @@ class HaaretzParser(HtmlSoupParser):
                     existing_article.subtitle = subtitle
                     changed = True
                 if article_text != existing_article.text:
-                    existing_article.text = text
+                    existing_article.text = article_text
                     changed = True
                 if changed:
                     existing_article.save()
