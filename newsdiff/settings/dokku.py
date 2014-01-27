@@ -1,4 +1,5 @@
 import dj_database_url
+import urlparse
 
 from os import environ
 from .base import *
@@ -13,7 +14,22 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
-BROKER_URL = environ.get('REDIS_URL')
+BROKER_URL = REDIS_URL = environ.get('REDIS_URL')
+redis_url = urlparse.urlparse(REDIS_URL)
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': '{}:{}'.format(redis_url.hostname, redis_url.port),
+        'OPTIONS': {
+            'DB': 0,
+            'PASSWORD': redis_url.password,
+            'PARSER_CLASS': 'redis.connection.HiredisParser'
+        },
+    },
+}
+
+SECRET_KEY = environ.get('SECRET_KEY')
 
 STATICFILES_STORAGE = DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY')

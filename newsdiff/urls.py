@@ -9,8 +9,10 @@ from newsdiff.core.views import *
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^haaretz/(?P<id>[\d\.]+)$', HaaretzArticleView.as_view()),
-    url(r'^ynet/(?P<id>[\d]+)$', YnetArticleView.as_view()),
+    url(r'^haaretz$', HaaretzListView.as_view(), name='haaretz_recent'),
+    url(r'^haaretz/(?P<id>[\d\.]+)$', HaaretzArticleView.as_view(), name='haaretz_article'),
+    url(r'^ynet$', YnetListView.as_view(), name='ynet_recent'),
+    url(r'^ynet/(?P<id>[\d]+)$', YnetArticleView.as_view(), name='ynet_article'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt', lambda x: HttpResponse('User-agent: *\nDisallow: /', mimetype='text/plain'))
 )

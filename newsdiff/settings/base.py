@@ -37,7 +37,7 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-SECRET_KEY = '65p2-o63(df#q7qq_pcj#y#l(bi#%ls)!-60lr$ric)6pb%tux'
+SECRET_KEY = 'N0_oNe_U53s_th1S_f#$^ing_k3y_:)'
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'storages',
     'celery',
     'reversion',
+    'sorl.thumbnail',
 
     'newsdiff.core',
     'newsdiff.docs',
