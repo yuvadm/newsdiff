@@ -33,7 +33,7 @@ class YnetParser(HtmlSoupParser):
         time = re.findall(r'\d\d:\d\d', author_bar.text)[0]
         article_date = self.TIMEZONE.localize(datetime.strptime(' '.join([date, time]), '%d.%m.%y %H:%M'))
         article_body = soup.find('div', class_='art_body').find_all('p')
-        article_text = '\n'.join([p.text.strip().encode('iso-8859-1') for p in article_body])
+        article_text = '\n'.join([p.text.strip().encode('iso-8859-1') for p in article_body if p.text])
 
         with transaction.atomic(), reversion.create_revision():
             try:
