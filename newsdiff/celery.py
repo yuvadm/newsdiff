@@ -13,5 +13,5 @@ app = Celery('newsdiff')
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
-raven_client = Client(os.environ.get('SENTRY_URL'))
+raven_client = Client(os.environ.get('SENTRY_DSN'))
 register_signal(raven_client)
