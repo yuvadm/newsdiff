@@ -42,3 +42,8 @@ AWS_S3_SECURE_URLS = False
 AWS_HEADERS = {
     # 'Cache-Control': 'public, max-age=86400',
 }
+
+SENTRY_DSN = environ.get('SENTRY_DSN')
+INSTALLED_APPS += (
+    'raven.contrib.django.raven_compat',
+)
