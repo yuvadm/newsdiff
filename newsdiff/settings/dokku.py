@@ -43,7 +43,10 @@ AWS_HEADERS = {
     # 'Cache-Control': 'public, max-age=86400',
 }
 
-SENTRY_DSN = environ.get('SENTRY_DSN')
+RAVEN_CONFIG = {
+    'dsn': environ.get('SENTRY_DSN'),
+}
+
 INSTALLED_APPS += (
     'raven.contrib.django.raven_compat',
 )
