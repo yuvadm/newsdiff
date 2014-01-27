@@ -14,9 +14,12 @@
         {% endthumbnail %}
         {% endfor %}
         <pre style="white-space: pre-wrap;">{{ article.text }}</pre>
+        <br/><br/>
+        <h3>גרסאות קודמות</h3>
         {% for diff in diffs %}
         <hr>
-        <pre style="white-space: pre-wrap;">{{ diff.diff|safe }}</pre>
+        <pre style="white-space: pre-wrap;">{{ diff.date|date:'d/m/Y' }}<br/>{{ diff.date|date:'H:i' }}<br/><br/>{{ diff.diff|safe }}
+        </pre>
         {% endfor %}
     </body>
 </html>

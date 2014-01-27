@@ -11,14 +11,17 @@ class ArticleView(DetailView):
     slug_url_kwarg = 'id'
     template_name = 'article.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ArticleView, self).get_context_data(**kwargs)
+    def _get_diffs(self):
         versions = reversion.get_for_object(self.object)
         version_diffs = [(v1, v2) for v1, v2 in zip(versions, versions[1:])]
-        context['diffs'] = [{
-            'diff': generate_patch_html(v2, v1, 'text', cleanup='semantic')
+        return [{
+            'diff': generate_patch_html(v2, v1, 'text', cleanup='semantic'),
+            'date': v1.revision.date_created
         } for (v1, v2) in version_diffs]
-        # context['diffs'] = [(v1, v2) for v1, v2 in zip(versions, versions[1:])]
+
+    def get_context_data(self, **kwargs):
+        context = super(ArticleView, self).get_context_data(**kwargs)
+        context['diffs'] = self._get_diffs()
         return context
 
 
