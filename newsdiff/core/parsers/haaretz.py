@@ -8,6 +8,7 @@ from django.db import transaction
 
 from .base import HtmlSoupParser
 from ..models import HaaretzArticle, HaaretzImage
+from ..tasks import preload_thumbnail
 from ..utils import get_file_from_url
 
 
@@ -69,6 +70,8 @@ class HaaretzParser(HtmlSoupParser):
                     if created:
                         article_image.image.save(name, image_file)
                         article_image.save()
+
+                        preload_thumbnail.delay(article_image.image, '150x120')
 
     def clean_article_href(self, href):
         href = href.replace('.premium-', '').split('#')[0]

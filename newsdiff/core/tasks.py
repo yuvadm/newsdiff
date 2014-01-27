@@ -3,6 +3,7 @@ import logging
 from newsdiff.celery import app
 from newsdiff.core.parsers.haaretz import HaaretzParser
 from newsdiff.core.parsers.ynet import YnetParser
+from sorl.thumbnail import get_thumbnail
 
 @app.task()
 def process_haaretz_homepage():
@@ -27,3 +28,7 @@ def process_ynet_homepage():
 def process_ynet_article(url):
     yp = YnetParser()
     yp.process_article(url)
+
+@app.task()
+def preload_thumbnail(filename, size):
+    _im = get_thumbnail(filename, size)
