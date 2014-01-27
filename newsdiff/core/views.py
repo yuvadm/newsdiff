@@ -43,7 +43,7 @@ class ArticleListView(ListView):
 
     def _get_latest_revisions(self):
         model_content_type = ContentType.objects.get_for_model(self.model)
-        versions = Version.objects.filter(content_type=model_content_type).order_by('-revision__date_created')
+        versions = Version.objects.filter(content_type=model_content_type).order_by('-revision__date_created')[:self.paginate_by]
         return versions
 
     def get_context_data(self, **kwargs):
