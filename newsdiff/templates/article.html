@@ -6,6 +6,9 @@
     <body dir="rtl">
         <h1>{{ article.title }}</h1>
         <h2>{{ article.subtitle }}</h2>
+        {% for image in article.images.all %}
+        <a href="{{ image.image.url }}"><img src="{{ image.image.url }}" width="150"></a>
+        {% endfor %}
         <pre style="white-space: pre-wrap;">{{ article.text }}</pre>
         {% for diff in diffs %}
         <hr>
