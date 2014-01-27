@@ -21,6 +21,6 @@ class HaaretzArticleView(DetailView):
         version_diffs = [(v1, v2) for v1, v2 in zip(versions, versions[1:])]
         context['diffs'] = [{
             'diff': generate_patch_html(v1, v2, 'text', cleanup='semantic')
-        } for (v1, v2) in version_diffs][::-1]
+        } for (v1, v2) in version_diffs]
         # context['diffs'] = [(v1, v2) for v1, v2 in zip(versions, versions[1:])]
         return context
