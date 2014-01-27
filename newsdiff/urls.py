@@ -10,6 +10,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^haaretz/(?P<id>[\d\.]+)$', HaaretzArticleView.as_view()),
+    url(r'^ynet/(?P<id>[\d]+)$', YnetArticleView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt', lambda x: HttpResponse('User-agent: *\nDisallow: /', mimetype='text/plain'))
 )
