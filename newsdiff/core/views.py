@@ -1,5 +1,6 @@
 import reversion
 
+from django.contrib.contenttypes.models import ContentType
 from django.views.generic import DetailView, ListView
 from reversion.helpers import generate_patch_html
 from reversion.models import Version
@@ -39,6 +40,16 @@ class ArticleListView(ListView):
     context_object_name = 'articles'
     template_name = 'articles.html'
     paginate_by = 10
+
+    def _get_latest_revisions(self):
+        model_content_type = ContentType.objects.get_for_model(self.model)
+        versions = Version.objects.filter(content_type=model_content_type).order_by('-revision__date_created')
+        return versions
+
+    def get_context_data(self, **kwargs):
+        context = super(ArticleListView, self).get_context_data(**kwargs)
+        context['latest_revisions'] = self._get_latest_revisions()
+        return context
 
 
 class HaaretzListView(ArticleListView):
