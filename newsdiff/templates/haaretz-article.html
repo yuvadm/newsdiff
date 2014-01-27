@@ -1,0 +1,15 @@
+<!doctype html5>
+<html>
+    <head>
+        <title>{{ article.title }}</title>
+    </head>
+    <body dir="rtl">
+        <h1>{{ article.title }}</h1>
+        <h2>{{ article.subtitle }}</h2>
+        <pre style="white-space: pre-wrap;">{{ article.text }}</pre>
+        {% for diff in diffs %}
+        <hr>
+        <pre style="white-space: pre-wrap;">{{ diff.diff|safe }}</pre>
+        {% endfor %}
+    </body>
+</html>
