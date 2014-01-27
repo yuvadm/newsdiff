@@ -39,7 +39,7 @@ class YnetArticleView(ArticleView):
 class ArticleListView(ListView):
     context_object_name = 'articles'
     template_name = 'articles.html'
-    paginate_by = 10
+    paginate_by = 50
 
     def _get_latest_revisions(self):
         model_content_type = ContentType.objects.get_for_model(self.model)
