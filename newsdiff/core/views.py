@@ -20,7 +20,7 @@ class HaaretzArticleView(DetailView):
         versions = reversion.get_for_object(self.object)
         version_diffs = [(v1, v2) for v1, v2 in zip(versions, versions[1:])]
         context['diffs'] = [{
-            'diff': generate_patch_html(v1, v2, 'text', cleanup='semantic')
+            'diff': generate_patch_html(v2, v1, 'text', cleanup='semantic')
         } for (v1, v2) in version_diffs]
         # context['diffs'] = [(v1, v2) for v1, v2 in zip(versions, versions[1:])]
         return context
