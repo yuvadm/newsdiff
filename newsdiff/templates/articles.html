@@ -13,13 +13,6 @@
                     {% for article in articles %}
                     <li>
                         <a href="{% url 'haaretz_article' article.haaretz_id %}">
-                            {% if article.images.all %}
-                            {% thumbnail article.images.all.0.image '60x60' as tim %}
-                            <img src="{{ tim.url }}">
-                            {% endthumbnail %}
-                            {% else %}
-                            <img src="http://placekitten.com/g/60/45">
-                            {% endif %}
                             <span>{{ article.title }}</span>
                         </a>
                     </li>
