@@ -70,8 +70,8 @@ class HaaretzParser(HtmlSoupParser):
                         article_image.image.save(name, image_file)
                         article_image.save()
                         
-                        from ..tasks import preload_thumbnail
-                        preload_thumbnail.delay(article_image.image.url, '150x120')
+                        # from ..tasks import preload_thumbnail
+                        # preload_thumbnail.delay(article_image.image.url, '150x120')
 
     def clean_article_href(self, href):
         href = href.replace('.premium-', '').split('#')[0]
