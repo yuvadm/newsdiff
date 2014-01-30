@@ -1,10 +1,12 @@
 import reversion
 
 from django.contrib.contenttypes.models import ContentType
+from django.http import Http404
 from django.views.generic import DetailView, ListView
 from reversion.helpers import generate_patch_html
 from reversion.models import Version
 from .models import *
+from .tasks import process_haaretz_article
 
 
 class ArticleView(DetailView):
@@ -29,6 +31,17 @@ class ArticleView(DetailView):
 class HaaretzArticleView(ArticleView):
     model = HaaretzArticle
     slug_field = 'haaretz_id'
+
+    def get_object(self, queryset=None):
+        try:
+            return super(HaaretzArticleView, self).get_object(queryset=queryset)
+        except Http404 as e:
+            if not self.request.user.is_authenticated():
+                raise e
+            else:
+                id = self.kwargs.get(self.slug_url_kwarg, None)
+                process_haaretz_article.delay('http://www.haaretz.co.il/{}'.format(id))
+                raise Http404('Attempting to fetch haaretz article')
 
 
 class YnetArticleView(ArticleView):
