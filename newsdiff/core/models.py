@@ -14,7 +14,7 @@ class HaaretzArticle(models.Model):
     haaretz_id = models.CharField(max_length=12, unique=True, db_index=True)
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=1000, blank=True, null=True)
-    author = models.CharField(max_length=60)
+    author = models.CharField(max_length=120)
     text = models.TextField()
     date = models.DateTimeField()
 
