@@ -24,16 +24,19 @@ class HaaretzParser(HtmlSoupParser):
         return '{}/{}'.format(self.BASE_URL, article_id)
 
     def parse_article(self, url, soup):
-        haaretz_id = re.findall(self.ARTICLE_ID_PATTERN, url)[0]
-        title = soup.find('h1', class_='mainTitle').text.strip()
-        subtitle = soup.find('h2', class_='subtitle').text.strip()
-        author_bar = soup.find('ul', class_='author-bar')
-        author = author_bar.find(class_=re.compile('autorBar(Anchor|Writers)')).text.strip()
-        date = author_bar.find_all('li')[1].text.strip()
-        time = author_bar.find_all('li')[2].text.strip()
-        article_date = self.TIMEZONE.localize(datetime.strptime(' '.join([date, time]), '%d.%m.%Y %H:%M'))
-        article_body = soup.find('div', id='article-box').find_all('p')
-        article_text = '\n\n'.join([p.text.strip() for p in article_body])
+        try:
+            haaretz_id = re.findall(self.ARTICLE_ID_PATTERN, url)[0]
+            title = soup.find('h1', class_='mainTitle').text.strip()
+            subtitle = soup.find('h2', class_='subtitle').text.strip()
+            author_bar = soup.find('ul', class_='author-bar')
+            author = author_bar.find(class_=re.compile('autorBar(Anchor|Writers)')).text.strip()
+            date = author_bar.find_all('li')[1].text.strip()
+            time = author_bar.find_all('li')[2].text.strip()
+            article_date = self.TIMEZONE.localize(datetime.strptime(' '.join([date, time]), '%d.%m.%Y %H:%M'))
+            article_body = soup.find('div', id='article-box').find_all('p')
+            article_text = '\n\n'.join([p.text.strip() for p in article_body])
+        except AttributeError:
+            return
 
         with transaction.atomic(), reversion.create_revision():
             try:

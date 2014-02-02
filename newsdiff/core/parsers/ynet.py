@@ -26,10 +26,7 @@ class YnetParser(HtmlSoupParser):
     def parse_article(self, url, soup):
         ynet_id = re.findall(self.ARTICLE_ID_PATTERN, url)[0]
         title = soup.find('div', class_='art_header_title').text.strip().encode('iso-8859-1')
-        try:
-            subtitle = soup.find('div', class_='art_header_sub_title').text.strip().encode('iso-8859-1')
-        except:
-            subtitle = ''
+        subtitle = soup.find('div', class_='art_header_sub_title').text.strip().encode('iso-8859-1')
         author_bar = soup.find('span', class_='art_header_footer_author')
         author = author_bar.find('a').text.strip().encode('iso-8859-1')
         date = re.findall(r'\d\d.\d\d.\d\d', author_bar.text)[0]

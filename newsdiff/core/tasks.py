@@ -27,7 +27,12 @@ def process_ynet_homepage():
 @app.task(rate_limit='12/m')
 def process_ynet_article(url):
     yp = YnetParser()
-    yp.process_article(url)
+    try:
+        yp.process_article(url)
+    except:
+        # such ynet
+        # much errors
+        pass
 
 @app.task()
 def preload_thumbnail(filename, size):
