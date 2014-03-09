@@ -1,7 +1,7 @@
 import reversion
 
 from django.contrib.contenttypes.models import ContentType
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.generic import DetailView, ListView
 from reversion.helpers import generate_patch_html
 from reversion.models import Version
@@ -18,7 +18,9 @@ class ArticleView(DetailView):
         versions = reversion.get_for_object(self.object)
         version_diffs = [(v1, v2) for v1, v2 in zip(versions, versions[1:])]
         return [{
-            'diff': generate_patch_html(v2, v1, 'text', cleanup='semantic'),
+            'title_diff': generate_patch_html(v2, v1, 'title', cleanup='semantic'),
+            'subtitle_diff': generate_patch_html(v2, v1, 'subtitle', cleanup='semantic'),
+            'text_diff': generate_patch_html(v2, v1, 'text', cleanup='semantic'),
             'date': v1.revision.date_created
         } for (v1, v2) in version_diffs]
 
@@ -43,6 +45,14 @@ class HaaretzArticleView(ArticleView):
                 process_haaretz_article.delay('http://www.haaretz.co.il/{}'.format(id))
                 raise Http404('Attempting to fetch haaretz article')
 
+    def post(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated() and request.POST.get('star'):
+            article = self.get_object()
+            article.starred = True
+            article.save()
+            return HttpResponse('starred')
+        return HttpResponse('ok')
+
 
 class YnetArticleView(ArticleView):
     model = YnetArticle
@@ -52,7 +62,7 @@ class YnetArticleView(ArticleView):
 class ArticleListView(ListView):
     context_object_name = 'articles'
     template_name = 'articles.html'
-    paginate_by = 50
+    paginate_by = 100
 
     def _get_latest_revisions(self):
         model_content_type = ContentType.objects.get_for_model(self.model)

@@ -8,6 +8,9 @@
     <body dir="rtl">
         <h1>{{ article.title }}</h1>
         <h2>{{ article.subtitle }}</h2>
+        <h3>{{ article.author }}</h3>
+        <a href="{{ article.url }}">{{ article.url }}</a>
+        <form action="" method="POST">{% csrf_token %}<input type="hidden" name="star" value="star"></input><button type="submit">&#9733;</button></form>
         {% for image in article.images.all %}
         {% thumbnail image.image '150x120' as tim %}
         <a href="{{ image.image.url }}"><img src="{{ tim.url }}"></a>
@@ -18,7 +21,7 @@
         <h3>גרסאות קודמות</h3>
         {% for diff in diffs %}
         <hr>
-        <pre style="white-space: pre-wrap;">{{ diff.date|date:'d/m/Y' }}<br/>{{ diff.date|date:'H:i' }}<br/><br/>{{ diff.diff|safe }}
+        <pre style="white-space: pre-wrap;">{{ diff.date|date:'d/m/Y' }}<br/>{{ diff.date|date:'H:i' }}<br/><br/>{{ diff.title_diff|safe }}<br/><br/>{{ diff.subtitle_diff|safe }}<br/><br/><br/>{{ diff.text_diff|safe }}
         </pre>
         {% endfor %}
     </body>
