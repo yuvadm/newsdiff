@@ -1,144 +1,90 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import django.core.validators
+import django.contrib.auth.models
+import django.utils.timezone
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    needed_by = (
-        ('reversion', '0001_initial'),
-    )
+    dependencies = [
+        ('auth', '0006_require_contenttypes_0002'),
+    ]
 
-    def forwards(self, orm):
-        # Adding model 'NewsDiffUser'
-        db.create_table(u'core_newsdiffuser', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('username', self.gf('django.db.models.fields.CharField')(unique=True, max_length=30)),
-            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
-            ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_active', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-        ))
-        db.send_create_signal(u'core', ['NewsDiffUser'])
-
-        # Adding M2M table for field groups on 'NewsDiffUser'
-        m2m_table_name = db.shorten_name(u'core_newsdiffuser_groups')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('newsdiffuser', models.ForeignKey(orm[u'core.newsdiffuser'], null=False)),
-            ('group', models.ForeignKey(orm[u'auth.group'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['newsdiffuser_id', 'group_id'])
-
-        # Adding M2M table for field user_permissions on 'NewsDiffUser'
-        m2m_table_name = db.shorten_name(u'core_newsdiffuser_user_permissions')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('newsdiffuser', models.ForeignKey(orm[u'core.newsdiffuser'], null=False)),
-            ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['newsdiffuser_id', 'permission_id'])
-
-        # Adding model 'HaaretzArticle'
-        db.create_table(u'core_haaretzarticle', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=140)),
-            ('subtitle', self.gf('django.db.models.fields.CharField')(max_length=300, null=True, blank=True)),
-            ('text', self.gf('django.db.models.fields.TextField')()),
-            ('date', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal(u'core', ['HaaretzArticle'])
-
-        # Adding model 'HaaretzImage'
-        db.create_table(u'core_haaretzimage', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('article', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.HaaretzArticle'])),
-            ('origin_url', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('caption', self.gf('django.db.models.fields.CharField')(max_length=140, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'core', ['HaaretzImage'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'NewsDiffUser'
-        db.delete_table(u'core_newsdiffuser')
-
-        # Removing M2M table for field groups on 'NewsDiffUser'
-        db.delete_table(db.shorten_name(u'core_newsdiffuser_groups'))
-
-        # Removing M2M table for field user_permissions on 'NewsDiffUser'
-        db.delete_table(db.shorten_name(u'core_newsdiffuser_user_permissions'))
-
-        # Deleting model 'HaaretzArticle'
-        db.delete_table(u'core_haaretzarticle')
-
-        # Deleting model 'HaaretzImage'
-        db.delete_table(u'core_haaretzimage')
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'core.haaretzarticle': {
-            'Meta': {'object_name': 'HaaretzArticle'},
-            'date': ('django.db.models.fields.DateTimeField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'subtitle': ('django.db.models.fields.CharField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'}),
-            'text': ('django.db.models.fields.TextField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '140'}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        },
-        u'core.haaretzimage': {
-            'Meta': {'object_name': 'HaaretzImage'},
-            'article': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.HaaretzArticle']"}),
-            'caption': ('django.db.models.fields.CharField', [], {'max_length': '140', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'origin_url': ('django.db.models.fields.CharField', [], {'max_length': '200'})
-        },
-        u'core.newsdiffuser': {
-            'Meta': {'object_name': 'NewsDiffUser'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        }
-    }
-
-    complete_apps = ['core']
+    operations = [
+        migrations.CreateModel(
+            name='NewsDiffUser',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('password', models.CharField(verbose_name='password', max_length=128)),
+                ('last_login', models.DateTimeField(verbose_name='last login', blank=True, null=True)),
+                ('is_superuser', models.BooleanField(verbose_name='superuser status', help_text='Designates that this user has all permissions without explicitly assigning them.', default=False)),
+                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, verbose_name='username', validators=[django.core.validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.', 'invalid')], max_length=30)),
+                ('first_name', models.CharField(verbose_name='first name', blank=True, max_length=30)),
+                ('last_name', models.CharField(verbose_name='last name', blank=True, max_length=30)),
+                ('email', models.EmailField(verbose_name='email address', blank=True, max_length=254)),
+                ('is_staff', models.BooleanField(verbose_name='staff status', help_text='Designates whether the user can log into this admin site.', default=False)),
+                ('is_active', models.BooleanField(verbose_name='active', help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', default=True)),
+                ('date_joined', models.DateTimeField(verbose_name='date joined', default=django.utils.timezone.now)),
+                ('groups', models.ManyToManyField(related_query_name='user', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', to='auth.Group', verbose_name='groups', related_name='user_set')),
+                ('user_permissions', models.ManyToManyField(related_query_name='user', blank=True, help_text='Specific permissions for this user.', to='auth.Permission', verbose_name='user permissions', related_name='user_set')),
+            ],
+            options={
+                'verbose_name': 'user',
+                'abstract': False,
+                'verbose_name_plural': 'users',
+            },
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='HaaretzArticle',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('url', models.CharField(max_length=250)),
+                ('haaretz_id', models.CharField(unique=True, max_length=12, db_index=True)),
+                ('title', models.CharField(max_length=200)),
+                ('subtitle', models.CharField(blank=True, max_length=1000, null=True)),
+                ('author', models.CharField(max_length=120)),
+                ('text', models.TextField()),
+                ('date', models.DateTimeField()),
+                ('starred', models.BooleanField(default=False)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='HaaretzImage',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('origin_url', models.CharField(unique=True, max_length=250)),
+                ('image', models.ImageField(upload_to='images/haaretz')),
+                ('caption', models.CharField(blank=True, max_length=140, null=True)),
+                ('article', models.ForeignKey(to='core.HaaretzArticle', related_name='images')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='YnetArticle',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('url', models.CharField(max_length=250)),
+                ('ynet_id', models.CharField(unique=True, max_length=9, db_index=True)),
+                ('title', models.CharField(max_length=200)),
+                ('subtitle', models.CharField(blank=True, max_length=1000, null=True)),
+                ('author', models.CharField(max_length=60)),
+                ('text', models.TextField()),
+                ('date', models.DateTimeField()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='YnetImage',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('origin_url', models.CharField(unique=True, max_length=250)),
+                ('image', models.ImageField(upload_to='images/ynet')),
+                ('caption', models.CharField(blank=True, max_length=140, null=True)),
+                ('article', models.ForeignKey(to='core.YnetArticle', related_name='images')),
+            ],
+        ),
+    ]

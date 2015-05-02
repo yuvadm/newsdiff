@@ -17,7 +17,7 @@ DATABASES = {
 }
 
 
-MEDIA_ROOT = PROJECT_DIR.child('media')
+MEDIA_ROOT = str(PROJECT_DIR / 'media')
 MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

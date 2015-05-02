@@ -1,8 +1,7 @@
 from datetime import timedelta
-from unipath import FSPath as Path
+from pathlib import Path
 
-
-PROJECT_DIR = Path(__file__).absolute().ancestor(2)
+PROJECT_DIR = Path(__file__).resolve().parents[1]
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -28,7 +27,7 @@ STATIC_ROOT = ''
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    PROJECT_DIR.child('static'),
+    str(PROJECT_DIR / 'static'),
 )
 
 STATICFILES_FINDERS = (
@@ -70,7 +69,7 @@ ROOT_URLCONF = 'newsdiff.urls'
 WSGI_APPLICATION = 'newsdiff.wsgi.application'
 
 TEMPLATE_DIRS = (
-    PROJECT_DIR.child('templates'),
+    str(PROJECT_DIR / 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -83,7 +82,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'gunicorn',
-    'south',
     'storages',
     'celery',
     'reversion',
@@ -123,8 +121,6 @@ LOGGING = {
         },
     }
 }
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
