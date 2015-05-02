@@ -3,7 +3,7 @@ import requests
 
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 def get_file_from_url(url):

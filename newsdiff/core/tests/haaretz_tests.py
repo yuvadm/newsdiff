@@ -1,19 +1,19 @@
 from bs4 import BeautifulSoup
 from django.test import TestCase
-from unipath import FSPath as Path
+from pathlib import Path
 
 from newsdiff.core.parsers.haaretz import HaaretzParser
 from ..models import HaaretzArticle, HaaretzImage
 
 class HaaretzParsingTestCase(TestCase):
 
-    CONTENT_DIR = Path(__file__).absolute().parent.child('content')
+    CONTENT_DIR = str(Path(__file__).resolve().parents[1] / 'content')
 
     def setUp(self):
         self.parser = HaaretzParser()
 
     def _get_content(self, filename):
-        with open(self.CONTENT_DIR.child(filename), 'r') as f:
+        with open(str(self.CONTENT_DIR / filename), 'r') as f:
             return f.read()
 
     def _get_soup(self, filename):
