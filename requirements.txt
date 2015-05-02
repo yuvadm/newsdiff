@@ -1,7 +1,5 @@
 Django==1.8.1
 Pillow==2.8.1
-South==1.0.2
-Unipath==1.1
 amqp==1.4.6
 anyjson==0.3.3
 beautifulsoup4==4.3.2
@@ -10,14 +8,14 @@ boto==2.38.0
 celery==3.1.18
 diff-match-patch==20121119
 dj-database-url==0.2.2
-django-redis-cache==0.10.2
+django-redis-cache==0.13.1
 django-reversion==1.8.6
-django-storages==1.1.8
+django-storages-redux==1.2.3
 gunicorn==19.3.0
 hiredis==0.2.0
 honcho==0.6.6
 kombu==3.0.26
-lxml==3.2.4
+lxml==3.4.4
 psycopg2==2.6
 pytz==2015.2
 raven==5.3.1
