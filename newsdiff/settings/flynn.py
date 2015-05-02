@@ -1,5 +1,5 @@
 import dj_database_url
-import urlparse
+from urllib.parse import urlparse
 
 from os import environ
 from .base import *
@@ -15,7 +15,7 @@ DATABASES = {
 }
 
 BROKER_URL = REDIS_URL = environ.get('REDIS_URL')
-redis_url = urlparse.urlparse(REDIS_URL)
+redis_url = urlparse(REDIS_URL)
 
 CACHES = {
     'default': {
