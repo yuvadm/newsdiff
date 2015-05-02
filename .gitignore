@@ -1,6 +1,8 @@
 *.pyc
 *.rdb
 
-celerybeat-schedule
+__pycache__/
+media/
 
-newsdiff/media/
+celerybeat-schedule
+sublime-project.sublime-workspace
